@@ -39,7 +39,7 @@ component singleton {
 		local.files = directoryList(dir,true,'query');
 		for(var i=1; i<=local.files.recordCount; i++) {
 		
-			if(local.files['type'][i] == 'File' && listFindNoCase('cfm,cfc,js,xml,cfml,txt,css,xsd,sql,prefs,config,properties,log,ini,mxml,htm,html,csv,out',listLast(local.files['name'][i],'.'))) {
+			if(local.files['type'][i] == 'File' && listFindNoCase('cfm,cfc,js,xml,cfml,txt,css,xsd,sql,prefs,config,properties,log,ini,mxml,htm,html,csv,out,php',listLast(local.files['name'][i],'.'))) {
 				local.fullPath = local.files['directory'][i]&'\'&local.files['name'][i];
 				local.file = fileRead(fullPath);
 			
@@ -71,7 +71,7 @@ component singleton {
 					fullPath = fullPath,
 					hasCR = hasCR,
 					hasLF = hasLF,
-					hasCRLF = hasCRLF,
+					hasCRLF = hasCRLF
 				};
 				arrayAppend(thisCategory.files,fileInfo);
 			}
@@ -85,7 +85,11 @@ component singleton {
 	
 		local.file  = fileRead(fullPath);
 		
-		local.file = HTMLEditFormat(local.file);
+		// Like HTMLEditFormat, but without touching the line breaks
+		local.file = replace(local.file,"&","&amp;","all");
+		local.file = replace(local.file,"<","&lt;","all");
+		local.file = replace(local.file,">","&gt;","all");
+		local.file = replace(local.file,"""","&quot;","all");
 		
 	    local.file = replace(local.file," ","&nbsp","all");
 	    local.file = replace(local.file,tab,"&nbsp&nbsp&nbsp&nbsp&nbsp","all");
